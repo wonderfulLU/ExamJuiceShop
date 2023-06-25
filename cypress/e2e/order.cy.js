@@ -12,8 +12,7 @@ it('Ordering some item', () => {
 
   cy.log(`Find product ${user.product}`);
 
-  cy.log('Check that busket is empty');
-  
+  cy.log('Check that busket is empty');  
 
   findProduct(user)
 

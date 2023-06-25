@@ -2,46 +2,25 @@
 
 import user from "../fixtures/user.json"
 import { faker } from '@faker-js/faker';
-import homePage from "../support/pages/HomePage";
+import feedbackPage from "../support/pages/FeedbackPage";
 
 
 user.comment = faker.lorem.text().slice(0, 100);
 
 it('Solve capcha', () => {
 
-    homePage.visit();
-
-    cy.log('Go to Feedback form');
-    cy.visit('/#/contact');
+    feedbackPage.visit();
     
-    cy.get('#comment').should('be.empty').type(user.comment, { force: true })
+    feedbackPage.fillComment(user.comment);
 
-    cy.log('Calculate captcha result and fill it in field');
-    cy.get('#captcha').invoke('text').then((code) => {
-        const result = eval(code);
-        cy.log(result)
-        cy.get('#captchaControl').should('be.empty').type(result);
-    });
+    feedbackPage.slider();
 
-    cy.get('div.mat-slider-thumb').click({ force: true });    
+    feedbackPage.calcCaptcha();
 
-    cy.get('#rating')
-        .invoke('attr', 'aria-valuenow', '2').trigger('change');
-
-    cy.get('.mat-slider-thumb-container').then(($element) => {
-
-        $element.attr('style', 'transform: translateX(-25%);');
-
-        cy.get('.mat-slider-thumb').click({ force: true });
-    });
-
-    cy.log('Click Submit button to send feedback');
-    cy.get('#submitButton').should('contain', 'Submit').click();
+    feedbackPage.submitButton();
 
     cy.log('Confirmation notification about sent feedback');
     cy.get('.mat-simple-snack-bar-content').should('contain', 'Thank you for your feedback');
-
-
 
 })
 

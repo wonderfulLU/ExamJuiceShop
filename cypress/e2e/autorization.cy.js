@@ -1,7 +1,12 @@
 /// <reference types="cypress"/> 
 
 import loginPage from "../support/pages/LoginPage";
+import homePage from "../support/pages/HomePage";
 import user from "../fixtures/user.json";
+
+before ('Authorize user', () => {
+    homePage.registrationForAut(user.email, user.password, user.answer)
+})
 
 it('Autorization', () => {
 
@@ -13,7 +18,6 @@ it('Autorization', () => {
 
     loginPage.submitLoginForm(user.email, user.password);
 
-    cy.log('Check user is authorized');
-    cy.get('#navbarAccount').click();
-    cy.get('[aria-label="Go to user profile"]').should('contain', user.email)
+    loginPage.checkUserAut(user.email);
+    
 })

@@ -5,15 +5,15 @@ export function login(user) {
 
     cy.log('Open website login form');
     loginPage.visit();
+    cy.log('Close Welcome Banner');
+    cy.get('button[aria-label="Close Welcome Banner"]').click();
 
     cy.log('Check user is unauthorized');
     cy.getCookie('token').should('be.null');
 
     loginPage.submitLoginForm(user.email, user.password);
 
-    cy.log('Check user is authorized');
-    cy.get('#navbarAccount').click();
-    cy.get('[aria-label="Go to user profile"]').should('contain', user.email)
+    loginPage.checkUserAut(user.email)
 
     cy.log('Accept cookies');
     cy.get('[aria-label="cookieconsent"] [aria-label="dismiss cookie message"]').click();
